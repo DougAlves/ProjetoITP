@@ -65,43 +65,76 @@ Imagem meuFiltro(Imagem origem) {
 Imagem filtroPintura (Imagem original){
 	Imagem resultado = alocarImagem(original);
 	int cont=0;
-	for(int i =1; i<original.h; i+=3){
-		for (int j =1; j<original.w;j+=3){
-			if (derivada()>0){
-				resultado =	pintar(original,i,j,0);
-			}
-			else if(derivada(auxVet)<0){
-				resultado = pintar(original,i,j,1);
-			}
+	for(int i =1; i<original.h-1; i++){
+		for (int j =1; j<original.w-1;j++){
+			//if (bordah(original, i-1, j-1)>0 || bordav(original, i-1, j-1) >0){
+				resultado =	pintar(original,i,j,1);
+			//}
+
 		}
 	}
 	return resultado;
 }
-int derivada(Imagem original, int i, int j){
+int bordah(Imagem original, int i, int j){
+	int resultd = 0;
+	for(int l =i; l < i+3; l++){
+		for(int k =j; k < j+3; k++){
+			if(l ==i){
+			resultd += original.m[l][k][0]*(-1);
+			}
+			else if(l == i+1){
+				resultd += original.m[l][k][0]*0;
+			}
+			else{
+				resultd += original.m[l][k][0]*1;
+			}
+
+		}
+	}	
+	resultd = resultd/9;
+	return resultd;
 	
 }
+int bordav(Imagem original, int i, int j){
+	int resultd = 0;
+	for(int l =i; l < i+3; l++){
+		for(int k =j; k < j+3; k++){
+			if(k ==j){
+			resultd += original.m[l][k][0]*(-1);
+			}
+			else if(k == j+1){
+				resultd += original.m[l][k][0]*0;
+			}
+			else{
+				resultd += original.m[l][k][0]*1;
+			}
+
+		}
+	}	
+	resultd = resultd/9;
+	return resultd;
+	
+}
+
 Imagem pintar(Imagem original,int i, int j, int borda){
 	int comp, espe, ale, ret, dens, constI =i, constJ =j, aux=0;
 	comp = (int) gtk_range_get_value(GTK_RANGE(comprimento));
 	espe = (int) gtk_range_get_value(GTK_RANGE(espessura));
 	dens = (int) gtk_range_get_value(GTK_RANGE(densidade));
 	Imagem resultado = original;
-	if (borda){
-		for (i; comp<i; i--){
-			for (j;espe<j;j--){
-				resultado.m[i][j][0] = original.m[constI][constJ][0];
-				resultado.m[i][j][1] = original.m[constI][constJ][1];
-				resultado.m[i][j][2] = original.m[constI][constJ][2];
+	for (i; comp-i < constI ; i--){
+		if(i >= 0){
+			for(j; espe - j < constJ; j--){
+				if(j >= 0){
+					resultado.m[i][j][0] = original.m[constI][constJ][0];
+					resultado.m[i][j][1] = original.m[constI][constJ][1];
+					resultado.m[i][j][2] = original.m[constI][constJ][2];
+				}
 			}
 		}
-	}else{
-		for (i; comp>i; i++){
-			for (j;espe>j;j++){
-				resultado.m[i][j][0] = original.m[constI][constJ][0];
-				resultado.m[i][j][1] = original.m[constI][constJ][1];
-				resultado.m[i][j][2] = original.m[constI][constJ][2];
-			}
-		}
+	}
+
+		
 	}
 	return resultado;
 }
