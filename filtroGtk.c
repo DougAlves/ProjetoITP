@@ -109,7 +109,7 @@ void funcaoAplicar(GtkWidget *widget, gpointer data) {
 
 	funcaoRestaurar(NULL, NULL);
 	//Imagem img = obterMatrizImagem(image);
-	Imagem res = meuFiltro(original);
+	Imagem res = filtroPintura(original);
 	atualizarGtkImage(res);
 	desalocarImagem(res);
 	gtk_label_set_text(GTK_LABEL(label1), "Filtro aplicado");

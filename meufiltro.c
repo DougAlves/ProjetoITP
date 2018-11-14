@@ -10,14 +10,7 @@ void inicializarWidgetsMeuFiltro() {
 	densidade = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,0, 10, 1);
 	widgetMisturarCanais = gtk_check_button_new_with_label("Misturar canais");
 	g_signal_connect(G_OBJECT(widgetControleNivel), "value-changed", G_CALLBACK(funcaoAplicar), NULL);
-	g_signal_connect(G_OBJECT(comprimento), "value-changed", G_CALLBACK(testeWidget), NULL);
 }
-void testeWidget(GtkWidget *widget, gpointer data){
-	printf("%d\n", (int) gtk_range_get_value(GTK_RANGE(comprimento)));
-
-	
-}
-
 void adicionarWidgetsMeuFiltro(GtkWidget *container) {
 
 	GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
@@ -70,10 +63,45 @@ Imagem meuFiltro(Imagem origem) {
 	return destino;
 }
 Imagem filtroPintura (Imagem original){
-	int comp, espe, ale, ret, dens;
-	comp = gtk_range_get_value(GTK_RANGE(comprimento));
-	espe = gtk_range_get_value(GTK_RANGE(espessura));
-	dens = gtk_range_get_value(GTK_RANGE(densidade));
-
-
+	Imagem resultado = alocarImagem(original);
+	int cont=0;
+	for(int i =1; i<original.h; i+=3){
+		for (int j =1; j<original.w;j+=3){
+			if (derivada()>0){
+				resultado =	pintar(original,i,j,0);
+			}
+			else if(derivada(auxVet)<0){
+				resultado = pintar(original,i,j,1);
+			}
+		}
+	}
+	return resultado;
+}
+int derivada(Imagem original, int i, int j){
+	
+}
+Imagem pintar(Imagem original,int i, int j, int borda){
+	int comp, espe, ale, ret, dens, constI =i, constJ =j, aux=0;
+	comp = (int) gtk_range_get_value(GTK_RANGE(comprimento));
+	espe = (int) gtk_range_get_value(GTK_RANGE(espessura));
+	dens = (int) gtk_range_get_value(GTK_RANGE(densidade));
+	Imagem resultado = original;
+	if (borda){
+		for (i; comp<i; i--){
+			for (j;espe<j;j--){
+				resultado.m[i][j][0] = original.m[constI][constJ][0];
+				resultado.m[i][j][1] = original.m[constI][constJ][1];
+				resultado.m[i][j][2] = original.m[constI][constJ][2];
+			}
+		}
+	}else{
+		for (i; comp>i; i++){
+			for (j;espe>j;j++){
+				resultado.m[i][j][0] = original.m[constI][constJ][0];
+				resultado.m[i][j][1] = original.m[constI][constJ][1];
+				resultado.m[i][j][2] = original.m[constI][constJ][2];
+			}
+		}
+	}
+	return resultado;
 }
