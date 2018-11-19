@@ -16,7 +16,7 @@ Imagem original, resultado;
 Imagem alocarImagem(Imagem referencia);
 void desalocarImagem(Imagem referencia);
 int derivada(unsigned char **numeros);
-Imagem pintar(Imagem original,int i, int j, int borda);
+Imagem pintar(Imagem original, int i, int j, Imagem resultado);
 
 #endif
 

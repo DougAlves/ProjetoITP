@@ -25,7 +25,7 @@ void adicionarWidgetsMeuFiltro(GtkWidget *container);
 
 int bordah(Imagem original, int i, int j);
 int bordav(Imagem original, int i, int j);
-Imagem pintar(Imagem original,int i, int j, int borda);
+Imagem pintar(Imagem original,int i, int j, Imagem resultado);
 Imagem filtroPintura (Imagem original);
 
 //esta funcao esta implementada em filtroGtk.c, nao precisa alterar
