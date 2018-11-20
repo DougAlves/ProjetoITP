@@ -12,10 +12,8 @@ GtkWidget *widgetControleNivel;
 GtkWidget *widgetMisturarCanais;
 GtkWidget *comprimento;
 GtkWidget *espessura;
-GtkWidget *aleatoria;
-GtkWidget *retilinea;
-GtkWidget *densidade;
-GtkWidget *orientacaoPinselada;
+GtkWidget *label_comp;
+GtkWidget *label_espe;
 
 Imagem filtroPintura(Imagem original);
 Imagem meuFiltro(Imagem origem);
