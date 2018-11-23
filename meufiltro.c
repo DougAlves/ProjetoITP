@@ -2,10 +2,10 @@
 
 void inicializarWidgetsMeuFiltro() {
 	//widgets das opcoes de filtro
-	comprimento = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,0, 20, 1);
+	comprimento = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,1, 20, 1);
 	label_comp = gtk_label_new("Comprimento das pinceladas");
 	label_espe = gtk_label_new("Espessura das pinceladas");
-	espessura = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,0, 20, 1);
+	espessura = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,1, 20, 1);
 }
 void adicionarWidgetsMeuFiltro(GtkWidget *container) {
 
@@ -57,16 +57,13 @@ Imagem filtroPintura (Imagem original){
 	Imagem resultado = alocarImagem(original);
 	int comp= (int) gtk_range_get_value(GTK_RANGE(comprimento)), espe = (int) gtk_range_get_value(GTK_RANGE(espessura));
 	int bordaH = 0, bordaV = 0;
-	if(comp == 0 || espe == 0){
-		return original;
-	}
 	for(int i =1; i<original.h-1; i++){
 		for (int j = 1; j < original.w-1; j++){
-			bordaH= bordah(original, i-1, j-1);
-			bordaV = bordav(original, i-1, j-1);
-			if (bordaH>1 || bordaV >1 || bordaH<-1 ||bordaV<-1){
+			//bordaH= bordah(original, i-1, j-1);
+			//bordaV = bordav(original, i-1, j-1);
+			//if (bordaH>1 || bordaV >1 || bordaH<-1 ||bordaV<-1){
 				resultado =	pintar(original,i,j,resultado);
-			}
+			//}
 		}
 	}
 	return resultado;
@@ -94,35 +91,53 @@ Imagem filtroPintura (Imagem original){
  	for(int l =i; l < i+3; l++){
  		for(int k =j; k < j+3; k++){
  			if(k ==j){
+				 if(l==i+1){
+					resultd += original.m[l][k][0]*(-2);
+				 }
  			resultd += original.m[l][k][0]*(-1);
  			}
  			else if(k == j+1){
  				resultd += original.m[l][k][0]*0;
  			}
  			else{
+				if(l==i+1){
+					resultd += original.m[l][k][0]*(2);
+				}
  				resultd += original.m[l][k][0]*1;
- 
  			}
  		}	
  	}
  	resultd = resultd/9;
  	return resultd;
- }
+}
 Imagem pintar(Imagem original,int i, int j, Imagem resultado){
 	int comp, espe, ale, ret, dens;
 	comp = (int) gtk_range_get_value(GTK_RANGE(comprimento));
 	espe = (int) gtk_range_get_value(GTK_RANGE(espessura));
 	int x = i - comp, y = j - espe;
-	for (; x < i ; x++){
-		if(x >= 0){
-			for(; y < j; y++){
-				if(y >= 0){
-					resultado.m[x][y][0] = original.m[i][j][0];
-					resultado.m[x][y][1] = original.m[i][j][1];
-					resultado.m[x][y][2] = original.m[i][j][2];
-				}
-			}
+	Imagem square;
+	square.w = x;
+	square.h = y;
+	for (int k =0; k<square.h; k++){
+		for (int l=0; l<square.w;l++){
+			square.m[k][l][0] = original.m[x][y][0];
+			square.m[k][l][1] = original.m[x][y][1];
+			square.m[k][l][2] = original.m[x][y][2];
+			y++;
 		}
+		x++;
 	}
+ 	Imagem rsquare = rotacionar(square);
+	// for (; x < i ; x++){
+	// 	if(x >= 0){
+	// 		for(; y < j; y++){
+	// 			if(y >= 0){
+	// 				resultado.m[x][y][0] = original.m[i][j][0];
+	// 				resultado.m[x][y][1] = original.m[i][j][1];
+	// 				resultado.m[x][y][2] = original.m[i][j][2];
+	// 			}
+	// 		}
+	// 	}
+	// }
 	return resultado;
 }
