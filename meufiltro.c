@@ -6,6 +6,7 @@ void inicializarWidgetsMeuFiltro() {
 	label_comp = gtk_label_new("Comprimento das pinceladas");
 	label_espe = gtk_label_new("Espessura das pinceladas");
 	espessura = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,1, 20, 1);
+	angulo = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,1, 180, 1);
 }
 void adicionarWidgetsMeuFiltro(GtkWidget *container) {
 
@@ -16,7 +17,7 @@ void adicionarWidgetsMeuFiltro(GtkWidget *container) {
 	gtk_container_add(GTK_CONTAINER(vbox), comprimento);
 	gtk_container_add(GTK_CONTAINER(vbox),label_espe);
 	gtk_container_add(GTK_CONTAINER(vbox), espessura);
-
+	gtk_container_add(GTK_CONTAINER(vbox), angulo);
 }
 
 Imagem meuFiltro(Imagem origem) {
@@ -118,26 +119,49 @@ Imagem pintar(Imagem original,int i, int j, Imagem resultado){
 	Imagem square;
 	square.w = x;
 	square.h = y;
+	//aloca matriz aux  
+	for(i = 0; i < square.h; i++) {
+		square.m[i] = malloc(sizeof(guchar *)*square.w);
+		for(j = 0; j < square.w; j++)
+			square.m[i][j] = malloc(sizeof(guchar)*square.numCanais);
+	}
+	//rotaciona matrix aux
 	for (int k =0; k<square.h; k++){
 		for (int l=0; l<square.w;l++){
-			square.m[k][l][0] = original.m[x][y][0];
-			square.m[k][l][1] = original.m[x][y][1];
-			square.m[k][l][2] = original.m[x][y][2];
-			y++;
+			square.m[k][l][0] = original.m[i-k][j-espe][0];
+			square.m[k][l][1] = original.m[i-k][j-espe][1];
+			square.m[k][l][2] = original.m[i-k][j-espe][2];
 		}
-		x++;
 	}
- 	Imagem rsquare = rotacionar(square);
-	// for (; x < i ; x++){
-	// 	if(x >= 0){
-	// 		for(; y < j; y++){
-	// 			if(y >= 0){
-	// 				resultado.m[x][y][0] = original.m[i][j][0];
-	// 				resultado.m[x][y][1] = original.m[i][j][1];
-	// 				resultado.m[x][y][2] = original.m[i][j][2];
-	// 			}
-	// 		}
-	// 	}
-	// }
+	//pinta matriz aux
+	for (int k =0;k<square.h; k++){
+		for (int l=0;l<square.w;l++){
+			int* result = rotacionar(square, k,l);
+			if(result[0]<= square.w && result[1]<= square.h){
+				square.m[result[0]][result[1]][0] = square.m[i][j][0];
+				square.m[result[0]][result[1]][1] = square.m[i][j][1];
+				square.m[result[0]][result[1]][2] = square.m[i][j][2];
+			}
+		}
+	}
+	 for (; x < i ; x++){
+	 	if(x >= 0){
+	 		for(; y < j; y++){
+	 			if(y >= 0){
+	 				resultado.m[x][y][0] = square.m[i][j][0];
+	 				resultado.m[x][y][1] = square.m[i][j][1];
+	 				resultado.m[x][y][2] = square.m[i][j][2];
+	 			}
+	 		}
+	 	}
+	 }
 	return resultado;
+}
+int* rotacionar(Imagem original,int i,int j){
+	int  *result;
+	result = malloc(2*(sizeof(int)));
+	int alfa = (int) gtk_range_get_value(GTK_RANGE(angulo));
+	result[0] = (original.w-i)*cos(alfa) + (original.h-j)*sin(alfa)*(-1);
+	result[1] = (original.w-i)*sin(alfa) + (original.h-j)*cos(alfa);
+	return result;
 }
