@@ -10,8 +10,8 @@
 //declare aqui os seus widgets
 GtkWidget *widgetControleNivel;
 GtkWidget *widgetMisturarCanais;
-GtkWidget *comprimento;
-GtkWidget *espessura;
+GtkWidget *WidComprimento;
+GtkWidget *WidEspessura;
 GtkWidget *label_comp;
 GtkWidget *label_espe;
 GtkWidget *angulo;
