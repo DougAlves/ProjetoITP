@@ -6,7 +6,6 @@ void inicializarWidgetsMeuFiltro() {
 	label_comp = gtk_label_new("Comprimento das pinceladas");
 	label_espe = gtk_label_new("Espessura das pinceladas");
 	WidEspessura = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,1, 20, 1);
-
 }
 void adicionarWidgetsMeuFiltro(GtkWidget *container) {
 
@@ -17,12 +16,8 @@ void adicionarWidgetsMeuFiltro(GtkWidget *container) {
 	gtk_container_add(GTK_CONTAINER(vbox), WidComprimento);
 	gtk_container_add(GTK_CONTAINER(vbox),label_espe);
 	gtk_container_add(GTK_CONTAINER(vbox), WidEspessura);
-	
 }
 
-Imagem meuFiltro(Imagem origem) {
-
-}
 Imagem filtroPintura (Imagem original){
 	Imagem resultado = alocarImagem(original);
 	int raio= (int) gtk_range_get_value(GTK_RANGE(WidComprimento));
@@ -48,7 +43,6 @@ Imagem filtroPintura (Imagem original){
 						sumR[i] += r;
 						sumG[i] += g;
 						sumB[i] += b;
-
 					}
 				}
 			}
@@ -71,74 +65,33 @@ Imagem filtroPintura (Imagem original){
 			free(contIntensidade);
 		}
 	}
+	for(int x=0; x<resultado.h; x++){
+		for(int y=0; y<raio;y++){
+			resultado.m[x][y][0] = 104;
+			resultado.m[x][y][1] = 83;
+			resultado.m[x][y][2] = 21;
+		}
+	}
+	for(int x=0; x<raio; x++){
+		for(int y=0; y<resultado.w;y++){
+			resultado.m[x][y][0] = 104;
+			resultado.m[x][y][1] = 83;
+			resultado.m[x][y][2] = 21;
+		}
+	}
+	for(int x=resultado.h-raio; x<resultado.h; x++){
+		for(int y=0; y<resultado.w;y++){
+			resultado.m[x][y][0] = 104;
+			resultado.m[x][y][1] = 83;
+			resultado.m[x][y][2] = 21;
+		}
+	}
+	for(int x=0; x<resultado.h; x++){
+		for(int y=resultado.w-raio; y<resultado.w;y++){
+			resultado.m[x][y][0] = 104;
+			resultado.m[x][y][1] = 83;
+			resultado.m[x][y][2] = 21;
+		}
+	}
 	return resultado;
 }
-//  int bordah(Imagem original, int i, int j){
-//  	int resultd = 0;
-//  	for(int l =i; l < i+3; l++){
-//  		for(int k =j; k < j+3; k++){
-//  			if(l ==i){
-//  				resultd += (original.m[l][k][0] + original.m[l][k][1] +original.m[l][k][2] )/(-3);
-//  			}
-//  			else if(l == i+1){
-//  				resultd += original.m[l][k][0]*0;
-//  			}
-//  			else{
-//  				resultd += (original.m[l][k][0] + original.m[l][k][1]+ original.m[l][k][2])/3;
-//  			}
-//  		}
-//  	}
-//  	resultd = resultd/9;
-//  	return resultd;
-//  }
-//  int bordav(Imagem original, int i, int j){
-//  	int resultd = 0;
-//  	for(int l =i; l < i+3; l++){
-//  		for(int k =j; k < j+3; k++){
-//  			if(k ==j){
-// 				 if(l==i+1){
-// 					resultd += original.m[l][k][0]*(-2);
-// 				 }
-//  			resultd += original.m[l][k][0]*(-1);
-//  			}
-//  			else if(k == j+1){
-//  				resultd += original.m[l][k][0]*0;
-//  			}
-//  			else{
-// 				if(l==i+1){
-// 					resultd += original.m[l][k][0]*(2);
-// 				}
-//  				resultd += original.m[l][k][0]*1;
-//  			}
-//  		}
-//  	}
-//  	resultd = resultd/9;
-//  	return resultd;
-// }
-// Imagem pintar(Imagem original,int i, int j, Imagem resultado){
-// 	int comp, espe, ale, ret, dens;
-// 	comp = (int) gtk_range_get_value(GTK_RANGE(comprimento));
-// 	espe = (int) gtk_range_get_value(GTK_RANGE(espessura));
-// 	int x =abs( i - comp), y = abs(j - espe);
-// 	int nsei = x+i, nsei1 = y+j;
-// 	//pinta matriz aux
-// 	for (;i<nsei; i++){
-// 		for (;j<nsei1;j++){
-// 			int* result = rotacionar(original, i,j);
-// 			if(result[0]<= resultado.w && result[1]<= resultado.h && result[0]>=0 && result[1]>= 0){
-// 				resultado.m[result[0]][result[1]][0] = original.m[i][j][0];
-// 				resultado.m[result[0]][result[1]][1] = original.m[i][j][1];
-// 				resultado.m[result[0]][result[1]][2] = original.m[i][j][2];
-// 			}
-// 		}
-// 	}
-// 	return resultado;
-// }
-// int* rotacionar(Imagem original,int i,int j){
-// 	int  *result;
-// 	result = malloc(2*(sizeof(int)));
-// 	int alfa = (int) gtk_range_get_value(GTK_RANGE(angulo));
-// 	result[0] = (original.w-i)*cos(alfa) + (original.h-j)*sin(alfa)*(-1);
-// 	result[1] = (original.w-i)*sin(alfa) + (original.h-j)*cos(alfa);
-// 	return result;
-// }make
