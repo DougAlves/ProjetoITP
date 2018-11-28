@@ -2,11 +2,11 @@
 
 void inicializarWidgetsMeuFiltro() {
 	//widgets das opcoes de filtro
-	WidComprimento = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,1, 20, 1);
+	WidComprimento = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,1, 5, 1);
 	label_comp = gtk_label_new("Comprimento das pinceladas");
 	label_espe = gtk_label_new("Espessura das pinceladas");
 	WidEspessura = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,1, 20, 1);
-	angulo = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL,1, 6, 1);
+
 }
 void adicionarWidgetsMeuFiltro(GtkWidget *container) {
 
@@ -17,7 +17,7 @@ void adicionarWidgetsMeuFiltro(GtkWidget *container) {
 	gtk_container_add(GTK_CONTAINER(vbox), WidComprimento);
 	gtk_container_add(GTK_CONTAINER(vbox),label_espe);
 	gtk_container_add(GTK_CONTAINER(vbox), WidEspessura);
-	gtk_container_add(GTK_CONTAINER(vbox), angulo);
+	
 }
 
 Imagem meuFiltro(Imagem origem) {
@@ -25,19 +25,19 @@ Imagem meuFiltro(Imagem origem) {
 }
 Imagem filtroPintura (Imagem original){
 	Imagem resultado = alocarImagem(original);
-	long *contIntensidade, *sumR, *sumG, *sumB;
-	contIntensidade = calloc(256,sizeof(int));
-	sumR = calloc(256,sizeof(int));
-	sumG = calloc(256,sizeof(int));
-	sumB = calloc(256,sizeof(int));
 	int raio= (int) gtk_range_get_value(GTK_RANGE(WidComprimento));
 	float intens = (float) gtk_range_get_value(GTK_RANGE(WidEspessura));
-	printf("askudhf");
-	for(int y =raio; y<original.h-raio; y++){
-		for (int x = raio; x < original.w-raio; x++){
+	for(int y =raio; y<original.w-raio; y++){
+		for (int x = raio; x < original.h-raio; x++){
+			int *contIntensidade;
+			contIntensidade = calloc(256,sizeof(int));
+			int *sumR, *sumG, *sumB;
+			sumR = calloc(256,sizeof(int));
+			sumG = calloc(256,sizeof(int));
+			sumB = calloc(256,sizeof(int));
 			for (int y_0 =-raio; y_0<=raio;y_0++ ){
 				for (int x_0 =-raio; x_0<=raio;x_0++ ){
-					if(x+x_0<original.w && y+y_0<original.h){
+					if(x+x_0<original.h && y+y_0<original.w && x+x_0>=0 && y+y_0>=0){
 						int r = original.m[x+x_0][y+y_0][0];
 						int g = original.m[x+x_0][y+y_0][1];
 						int b = original.m[x+x_0][y+y_0][2];
@@ -48,21 +48,27 @@ Imagem filtroPintura (Imagem original){
 						sumR[i] += r;
 						sumG[i] += g;
 						sumB[i] += b;
+
 					}
-				}			
+				}
 			}
 			int curMax = 0;
             int maxIndex = 0;
 			for( int i = 0; i < 256; i++ ){
-				printf("");
 				if(contIntensidade[i]>curMax){
 					curMax = contIntensidade[i];
 					maxIndex = i;
 				}
 			}
-			resultado.m[x][y][0] =  sumR[maxIndex]/curMax;
-			resultado.m[x][y][1] =  sumG[maxIndex]/curMax;
-			resultado.m[x][y][2] =  sumB[maxIndex]/curMax;
+			if(x < original.h && y < original.w){
+				resultado.m[x][y][0] =  sumR[maxIndex]/curMax;
+				resultado.m[x][y][1] =  sumG[maxIndex]/curMax;
+				resultado.m[x][y][2] =  sumB[maxIndex]/curMax;
+			}
+			free(sumR);
+			free(sumG);
+			free(sumB);
+			free(contIntensidade);
 		}
 	}
 	return resultado;
